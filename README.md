@@ -52,7 +52,7 @@ src/
 | Orgânico   | Marrom   | Casca de Banana, Resto de Comida          |
 | Pilha      | Laranja  | Pilha Usada, Bateria de Celular, Lâmpada  |
 
-## 🛠️ Tecnologias
+## Tecnologias
 
 - **Java 17+**
 - **Java Swing** (GUI)
