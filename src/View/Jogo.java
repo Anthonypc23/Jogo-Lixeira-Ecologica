@@ -33,7 +33,7 @@ public class Jogo extends JFrame {
     private int progresso;
 
     // === CONFIGURAÇÃO DE TEMPO ===
-    private static final double TEMPO_INICIAL = 30.0;   // Segundos no nível 1
+    private static final double TEMPO_INICIAL = 20.0;   // Segundos no nível 1
     private static final double REDUCAO_POR_NIVEL = 1.5; // Reduz por nível
     private static final double TEMPO_MINIMO = 3.0;      // Piso do tempo
     private double tempoRestante;
@@ -44,6 +44,8 @@ public class Jogo extends JFrame {
     private static final int PERDA_ERRO = 20;
     private static final double PENALIDADE_TEMPO_ERRO = 1.5; // Segundos perdidos ao errar
     private static final int PONTOS_POR_ACERTO = 10; // multiplicado pelo nível
+    private static final int NIVEL_SEM_TEXTO = 4;     // A partir deste nível, botões perdem o texto
+    private boolean jaAcertou = false;                  // Controla se já houve pelo menos 1 acerto
 
     // === CORES DAS LIXEIRAS ===
     private static final Color COR_PLASTICO  = new Color(239, 68, 68);   // Vermelho
@@ -274,12 +276,15 @@ public class Jogo extends JFrame {
             jogador.adicionarScore(PONTOS_POR_ACERTO * jogador.getNivel());
             progresso += GANHO_ACERTO;
 
+            jaAcertou = true;
+
             // Verifica se completou a barra → sobe de nível
             if (progresso >= 100) {
                 progresso = 0;
                 jogador.subirNivel();
                 calcularTempoDoNivel();
                 lblNivel.setText("Nível: " + jogador.getNivel());
+                atualizarTextoBotoes();
             }
 
             // Atualiza visual e reseta timer
@@ -299,6 +304,13 @@ public class Jogo extends JFrame {
             lblScore.setText("Score: " + jogador.getScore());
             sortearNovoLixo();
 
+            // Se já acertou antes e a barra chegou a zero, game over
+            if (jaAcertou && progresso <= 0) {
+                timerContagem.stop();
+                gameOver();
+                return;
+            }
+
             // Se o tempo acabou pela penalidade, game over
             if (tempoRestante <= 0) {
                 tempoRestante = 0;
@@ -308,6 +320,20 @@ public class Jogo extends JFrame {
             } else {
                 atualizarLabelTimer();
             }
+        }
+    }
+
+    // =========================================================================
+    // CONTROLE DE TEXTO DOS BOTÕES (nível 4+)
+    // =========================================================================
+    private void atualizarTextoBotoes() {
+        if (jogador.getNivel() >= NIVEL_SEM_TEXTO) {
+            btnPlastico.setText("");
+            btnPapel.setText("");
+            btnMetais.setText("");
+            btnVidro.setText("");
+            btnOrganicos.setText("");
+            btnPilha.setText("");
         }
     }
 
