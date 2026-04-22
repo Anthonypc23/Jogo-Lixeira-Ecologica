@@ -1,8 +1,8 @@
-# 🗑️ Jogo da Lixeira Ecológica
+#  Jogo da Lixeira Ecológica
 
 Jogo educativo desenvolvido em **Java Swing** como projeto de APS (Atividade Prática Supervisionada). O objetivo é classificar corretamente os lixos nas lixeiras ecológicas antes que o tempo acabe.
 
-## 🎮 Como Jogar
+##  Como Jogar
 
 1. Digite seu nome na tela inicial e clique em **Jogar**.
 2. Um item de lixo aparece no centro da tela (ex: Garrafa PET, Casca de Banana, Pilha Usada...).
@@ -11,20 +11,20 @@ Jogo educativo desenvolvido em **Java Swing** como projeto de APS (Atividade Pr�
 5. **Errou** → a barra desce e você perde 1,5 segundo do tempo restante.
 6. **Tempo esgotou** → Game Over!
 
-## 📈 Sistema de Níveis
+##  Sistema de Níveis
 
 - A barra de progresso vai de 0% a 100%.
 - Ao completar 100%, você **sobe de nível** e a barra reseta.
 - A cada nível, o tempo disponível para responder **diminui**, tornando o jogo mais difícil.
 - Tempo inicial: **30 segundos**, reduzindo 1,5s por nível (mínimo: 3s).
 
-## 🏆 Records
+##  Records
 
 - Os **5 melhores jogadores** são salvos em um arquivo `records.csv`.
 - A tabela de records é exibida automaticamente ao final de cada partida.
 - Também pode ser acessada pelo botão **Records** no menu inicial.
 
-## 🗂️ Estrutura do Projeto
+##  Estrutura do Projeto
 
 ```
 src/
@@ -41,7 +41,7 @@ src/
     └── PressStart2P-Regular.ttf  # Fonte pixel 8-bit
 ```
 
-## 🎨 Lixeiras e Cores
+##  Lixeiras e Cores
 
 | Lixeira    | Cor      | Exemplos de Lixo                          |
 |------------|----------|-------------------------------------------|
@@ -58,7 +58,7 @@ src/
 - **Java Swing** (GUI)
 - **Fonte Press Start 2P** (Google Fonts — visual 8-bit)
 
-## ▶️ Como Executar
+##  Como Executar
 
 1. Clone o repositório:
    ```bash
