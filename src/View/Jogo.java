@@ -7,7 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.net.URL;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 public class Jogo extends JFrame {
 
@@ -18,6 +21,7 @@ public class Jogo extends JFrame {
     private JLabel lblJogador;
     private JProgressBar jpbBarradeProgresso;
     private JLabel lblLixo;
+    private JLabel lblImagemLixo;
     private JButton btnPlastico;
     private JButton btnPapel;
     private JButton btnMetais;
@@ -55,6 +59,12 @@ public class Jogo extends JFrame {
     private static final int PONTOS_POR_ACERTO = 10; // multiplicado pelo nível
     private static final int NIVEL_SEM_TEXTO = 4;     // A partir deste nível, botões perdem o texto
     private boolean jaAcertou = false;                  // Controla se já houve pelo menos 1 acerto
+
+    // === TAMANHOS DE IMAGEM ===
+    private static final int IMG_LIXO_W = 120;
+    private static final int IMG_LIXO_H = 120;
+    private static final int IMG_BTN_W  = 48;
+    private static final int IMG_BTN_H  = 48;
 
     // === CORES DAS LIXEIRAS ===
     private static final Color COR_PLASTICO  = new Color(239, 68, 68);   // Vermelho
@@ -100,6 +110,7 @@ public class Jogo extends JFrame {
         lblScore = new JLabel("Score: 0");
         lblJogador = new JLabel(jogador.getNome());
         lblLixo = new JLabel("...", SwingConstants.CENTER);
+        lblImagemLixo = new JLabel("", SwingConstants.CENTER);
         lblTimer = new JLabel("Tempo: 0.0s", SwingConstants.CENTER);
 
         jpbBarradeProgresso = new JProgressBar(0, 100);
@@ -130,7 +141,7 @@ public class Jogo extends JFrame {
         lblJogador.setFont(FontePixel.obter(9f));
         lblJogador.setForeground(COR_TEXTO);
 
-        lblLixo.setFont(FontePixel.obter(30f));
+        lblLixo.setFont(FontePixel.obter(18f));
         lblLixo.setForeground(Color.WHITE);
 
         lblTimer.setFont(FontePixel.obter(18f));
@@ -141,24 +152,48 @@ public class Jogo extends JFrame {
         jpbBarradeProgresso.setForeground(COR_DESTAQUE);
         jpbBarradeProgresso.setBackground(new Color(60, 60, 80));
 
-        // Estiliza cada botão com a cor da lixeira
-        estilizarBotao(btnPlastico, COR_PLASTICO);
-        estilizarBotao(btnPapel, COR_PAPEL);
-        estilizarBotao(btnMetais, COR_METAL);
-        estilizarBotao(btnVidro, COR_VIDRO);
-        estilizarBotao(btnOrganicos, COR_ORGANICO);
-        estilizarBotao(btnPilha, COR_PILHA);
+        // Estiliza cada botão com a cor da lixeira e imagem
+        estilizarBotao(btnPlastico, COR_PLASTICO, "Plastico.jpeg");
+        estilizarBotao(btnPapel, COR_PAPEL, "Papel.jpeg");
+        estilizarBotao(btnMetais, COR_METAL, "Metal.jpeg");
+        estilizarBotao(btnVidro, COR_VIDRO, "Vidro.jpeg");
+        estilizarBotao(btnOrganicos, COR_ORGANICO, "Organico.jpeg");
+        estilizarBotao(btnPilha, COR_PILHA, "Pilha.jpeg");
     }
 
-    private void estilizarBotao(JButton btn, Color cor) {
-        btn.setPreferredSize(new Dimension(180, 70));
-        btn.setFont(FontePixel.obter(11f));
+    private void estilizarBotao(JButton btn, Color cor, String imgNome) {
+        btn.setPreferredSize(new Dimension(180, 90));
+        btn.setFont(FontePixel.obter(9f));
         btn.setBackground(cor);
         btn.setForeground(Color.WHITE);
         btn.setFocusPainted(false);
         btn.setOpaque(true);
         btn.setBorderPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btn.setHorizontalTextPosition(SwingConstants.CENTER);
+        btn.setIconTextGap(4);
+
+        ImageIcon icon = carregarImagem("/resources/lixeiras/" + imgNome, IMG_BTN_W, IMG_BTN_H);
+        if (icon != null) {
+            btn.setIcon(icon);
+        }
+    }
+
+    // =========================================================================
+    // CARREGAMENTO DE IMAGENS
+    // =========================================================================
+    private ImageIcon carregarImagem(String caminho, int largura, int altura) {
+        try {
+            URL url = getClass().getResource(caminho);
+            if (url == null) return null;
+            BufferedImage img = ImageIO.read(url);
+            Image scaled = img.getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaled);
+        } catch (Exception e) {
+            System.err.println("Erro ao carregar imagem: " + caminho + " - " + e.getMessage());
+            return null;
+        }
     }
 
     // =========================================================================
@@ -200,12 +235,23 @@ public class Jogo extends JFrame {
         // Painel do lixo (destaque visual)
         JPanel painelLixo = new JPanel(new GridBagLayout());
         painelLixo.setBackground(COR_PAINEL_LIXO);
-        painelLixo.setPreferredSize(new Dimension(700, 150));
+        painelLixo.setPreferredSize(new Dimension(700, 220));
         painelLixo.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(80, 80, 120), 2),
-                BorderFactory.createEmptyBorder(20, 40, 20, 40)
+                BorderFactory.createEmptyBorder(15, 40, 15, 40)
         ));
-        painelLixo.add(lblLixo);
+
+        GridBagConstraints gbcLixo = new GridBagConstraints();
+        gbcLixo.gridx = 0;
+        gbcLixo.anchor = GridBagConstraints.CENTER;
+
+        gbcLixo.gridy = 0;
+        gbcLixo.insets = new Insets(0, 0, 8, 0);
+        painelLixo.add(lblImagemLixo, gbcLixo);
+
+        gbcLixo.gridy = 1;
+        gbcLixo.insets = new Insets(0, 0, 0, 0);
+        painelLixo.add(lblLixo, gbcLixo);
 
         gbc.gridy = 1;
         gbc.insets = new Insets(10, 0, 15, 0);
@@ -251,6 +297,13 @@ public class Jogo extends JFrame {
     private void sortearNovoLixo() {
         lixoAtual = Lixos.sortearLixo(todosLixos);
         lblLixo.setText(lixoAtual.getNome());
+
+        ImageIcon icon = carregarImagem("/resources/lixos/" + lixoAtual.getImagem(), IMG_LIXO_W, IMG_LIXO_H);
+        if (icon != null) {
+            lblImagemLixo.setIcon(icon);
+        } else {
+            lblImagemLixo.setIcon(null);
+        }
     }
 
     private void calcularTempoDoNivel() {
